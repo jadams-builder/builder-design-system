@@ -1,103 +1,124 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-screen" style={{ color: 'var(--text-primary)' }}>
+      <div className="max-w-6xl mx-auto px-8 py-12">
+        <div className="text-center mb-16">
+          <h1 
+            className="text-6xl font-bold mb-6"
+            style={{ 
+              background: 'var(--bg-brand-gradient)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Builder.io Design System
+          </h1>
+          <p 
+            className="text-xl mb-8 max-w-2xl mx-auto"
+            style={{ color: 'var(--text-secondary)' }}
           >
-            Read our docs
-          </a>
+            A comprehensive design system with tokens, components, and patterns built for modern web applications.
+            Perfect for Fusion&apos;s AI-powered UI generation.
+          </p>
+          
+          <div className="flex gap-4 justify-center">
+            <a
+              href="/tokens/colors"
+              style={{
+                background: 'var(--button-primary-bg)',
+                color: 'var(--button-primary-text)',
+                borderRadius: 'var(--button-base-border-radius)',
+                padding: 'var(--button-base-padding-y) var(--button-base-padding-x)',
+                fontSize: 'var(--button-base-font-size)',
+                border: `var(--border-thin) solid var(--button-primary-border)`,
+                transition: 'var(--transition-fast)'
+              }}
+              className="inline-block text-decoration-none font-medium hover:opacity-90"
+            >
+              Explore Tokens
+            </a>
+            
+            <a
+              href="/components"
+              style={{
+                background: 'var(--button-secondary-bg)',
+                color: 'var(--button-secondary-text)',
+                borderRadius: 'var(--button-base-border-radius)',
+                padding: 'var(--button-base-padding-y) var(--button-base-padding-x)',
+                fontSize: 'var(--button-base-font-size)',
+                border: `var(--border-thin) solid var(--button-secondary-border)`,
+                transition: 'var(--transition-fast)'
+              }}
+              className="inline-block text-decoration-none font-medium hover:opacity-90"
+            >
+              View Components
+            </a>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div 
+            style={{
+              background: 'var(--card-bg)',
+              border: `var(--border-thin) solid var(--card-border)`,
+              borderRadius: 'var(--card-border-radius)',
+              padding: 'var(--card-padding)',
+              boxShadow: 'var(--card-shadow)',
+              transition: 'var(--transition-base)'
+            }}
+            className="hover:shadow-md"
+          >
+            <h3 className="text-2xl font-semibold mb-4" style={{ color: 'var(--text-brand-primary)' }}>
+              Design Tokens
+            </h3>
+            <p style={{ color: 'var(--text-secondary)' }}>
+              Comprehensive color palettes, typography scales, spacing systems, and semantic tokens
+              for consistent design across all interfaces.
+            </p>
+          </div>
+          
+          <div 
+            style={{
+              background: 'var(--card-bg)',
+              border: `var(--border-thin) solid var(--card-border)`,
+              borderRadius: 'var(--card-border-radius)',
+              padding: 'var(--card-padding)',
+              boxShadow: 'var(--card-shadow)',
+              transition: 'var(--transition-base)'
+            }}
+            className="hover:shadow-md"
+          >
+            <h3 className="text-2xl font-semibold mb-4" style={{ color: 'var(--text-brand-secondary)' }}>
+              Atomic Components
+            </h3>
+            <p style={{ color: 'var(--text-secondary)' }}>
+              Foundational UI components like buttons, inputs, cards, and typography that form
+              the building blocks of complex interfaces.
+            </p>
+          </div>
+          
+          <div 
+            style={{
+              background: 'var(--card-bg)',
+              border: `var(--border-thin) solid var(--card-border)`,
+              borderRadius: 'var(--card-border-radius)',
+              padding: 'var(--card-padding)',
+              boxShadow: 'var(--card-shadow)',
+              transition: 'var(--transition-base)'
+            }}
+            className="hover:shadow-md"
+          >
+            <h3 className="text-2xl font-semibold mb-4" style={{ color: 'var(--text-success)' }}>
+              Fusion Ready
+            </h3>
+            <p style={{ color: 'var(--text-secondary)' }}>
+              Designed specifically for AI-powered UI generation. Every component is documented
+              and structured for seamless integration with Fusion.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
