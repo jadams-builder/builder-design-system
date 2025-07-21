@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { Button } from '../../components/Button';
+import { Input } from '../../components/Input';
+import { Card, CardTitle, CardContent } from '../../components/Card';
 
 const components = [
   {
@@ -21,18 +23,10 @@ const components = [
     name: 'Input',
     href: '/components/input',
     description: 'Text input fields with validation states and focus handling',
-    status: 'coming-soon',
+    status: 'ready',
     preview: (
-      <div 
-        className="px-3 py-2 rounded border text-sm"
-        style={{
-          background: 'var(--input-bg)',
-          border: `var(--border-thin) solid var(--input-border)`,
-          borderRadius: 'var(--input-border-radius)',
-          color: 'var(--input-text)'
-        }}
-      >
-        Sample input field
+      <div style={{ maxWidth: '200px' }}>
+        <Input size="sm" placeholder="Sample input" />
       </div>
     )
   },
@@ -40,19 +34,16 @@ const components = [
     name: 'Card',
     href: '/components/card',
     description: 'Flexible container component with consistent elevation and spacing',
-    status: 'coming-soon',
+    status: 'ready',
     preview: (
-      <div 
-        className="p-3 rounded border text-sm"
-        style={{
-          background: 'var(--card-bg)',
-          border: `var(--border-thin) solid var(--card-border)`,
-          borderRadius: 'var(--card-border-radius)',
-          color: 'var(--text-primary)'
-        }}
-      >
-        Sample card content
-      </div>
+      <Card size="sm">
+        <CardTitle style={{ fontSize: 'var(--font-sm)', marginBottom: 'var(--space-1)' }}>
+          Sample Card
+        </CardTitle>
+        <CardContent style={{ fontSize: 'var(--font-xs)' }}>
+          Card content here
+        </CardContent>
+      </Card>
     )
   },
   {
