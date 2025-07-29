@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 const fontFamilies = [
-  { name: 'Primary', variable: '--font-primary', stack: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif', usage: 'Body text, UI elements' },
+  { name: 'Primary', variable: '--font-primary', stack: 'Poppins, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif', usage: 'Body text, UI elements' },
   { name: 'Secondary', variable: '--font-secondary', stack: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif', usage: 'Alternative sans-serif' },
   { name: 'Monospace', variable: '--font-mono', stack: 'JetBrains Mono, Fira Code, SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace', usage: 'Code blocks, data display' },
   { name: 'Display', variable: '--font-display', stack: 'var(--font-primary)', usage: 'Large headings, hero text' },

@@ -2,8 +2,8 @@
 @import "../builderio-design-tokens.css";
 
 @theme inline {
-  /* Font families */
-  --font-sans: var(--font-primary);
+  /* Font families - using Next.js font variable */
+  --font-sans: var(--font-poppins), var(--font-primary);
   --font-mono: var(--font-mono);
   
   /* Colors - extend Tailwind with our design tokens */
@@ -62,5 +62,5 @@
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--font-primary);
+  font-family: var(--font-poppins), var(--font-primary);
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 const colorSections = [
   {
@@ -92,13 +92,13 @@ function ColorCard({ color }: { color: { name: string; variable: string; hex: st
     >
       {/* Color swatch */}
       <div 
-        className="h-20 w-full cursor-pointer relative group"
-        style={{ background: `var(${color.variable})` }}
+        className="h-20 w-full cursor-pointer relative group hover:opacity-80 transition-opacity duration-200"
+        style={{ backgroundColor: color.hex }}
         onClick={() => copyToClipboard(color.hex, 'hex')}
         title="Click to copy hex value"
       >
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center">
-          <span className="text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black bg-opacity-50 px-2 py-1 rounded">
             {copied === 'hex' ? 'Copied!' : 'Click to copy'}
           </span>
         </div>

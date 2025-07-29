@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 
 const navigationItems = [
   {
     title: 'Getting Started',
+    collapsible: false,
     items: [
       { name: 'Overview', href: '/' },
       { name: 'Installation', href: '/getting-started/installation' },
@@ -12,6 +14,8 @@ const navigationItems = [
   },
   {
     title: 'Design Tokens',
+    collapsible: true,
+    defaultOpen: true,
     items: [
       { name: 'Colors', href: '/tokens/colors' },
       { name: 'Typography', href: '/tokens/typography' },
@@ -22,6 +26,8 @@ const navigationItems = [
   },
   {
     title: 'Components',
+    collapsible: true,
+    defaultOpen: true,
     items: [
       { name: 'Button', href: '/components/button' },
       { name: 'Input', href: '/components/input' },
@@ -32,6 +38,8 @@ const navigationItems = [
   },
   {
     title: 'Patterns',
+    collapsible: true,
+    defaultOpen: false,
     items: [
       { name: 'Forms', href: '/patterns/forms' },
       { name: 'Navigation', href: '/patterns/navigation' },
@@ -41,6 +49,24 @@ const navigationItems = [
 ];
 
 export function Navigation({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) {
+  // Initialize collapsed sections state based on defaultOpen values
+  const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>(() => {
+    const initialState: Record<string, boolean> = {};
+    navigationItems.forEach(section => {
+      if (section.collapsible) {
+        initialState[section.title] = !section.defaultOpen;
+      }
+    });
+    return initialState;
+  });
+
+  const toggleSection = (sectionTitle: string) => {
+    setCollapsedSections(prev => ({
+      ...prev,
+      [sectionTitle]: !prev[sectionTitle]
+    }));
+  };
+
   return (
     <>
       {/* Mobile overlay */}
@@ -75,38 +101,82 @@ export function Navigation({ isOpen, onToggle }: { isOpen: boolean; onToggle: ()
           <div className="space-y-6">
             {navigationItems.map((section) => (
               <div key={section.title}>
-                <h3 
-                  className="text-sm font-semibold uppercase tracking-wider mb-3"
-                  style={{ color: 'var(--text-tertiary)' }}
+                {section.collapsible ? (
+                  <button
+                    onClick={() => toggleSection(section.title)}
+                    className="flex items-center justify-between w-full text-left text-sm font-semibold uppercase tracking-wider mb-3 hover:opacity-80 transition-opacity"
+                    style={{ 
+                      color: 'var(--text-tertiary)',
+                      transition: 'var(--transition-fast)'
+                    }}
+                    aria-expanded={!collapsedSections[section.title]}
+                    aria-controls={`section-${section.title.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    <span>{section.title}</span>
+                    <svg
+                      className={`h-4 w-4 transform transition-transform ${
+                        collapsedSections[section.title] ? 'rotate-0' : 'rotate-90'
+                      }`}
+                      style={{ 
+                        transition: 'var(--transition-fast)',
+                        color: 'var(--text-tertiary)'
+                      }}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
+                ) : (
+                  <h3 
+                    className="text-sm font-semibold uppercase tracking-wider mb-3"
+                    style={{ color: 'var(--text-tertiary)' }}
+                  >
+                    {section.title}
+                  </h3>
+                )}
+                
+                <div
+                  id={`section-${section.title.toLowerCase().replace(/\s+/g, '-')}`}
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    section.collapsible && collapsedSections[section.title] 
+                      ? 'max-h-0 opacity-0' 
+                      : 'max-h-96 opacity-100'
+                  }`}
                 >
-                  {section.title}
-                </h3>
-                <ul className="space-y-2">
-                  {section.items.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        className="block py-2 px-3 rounded-md text-sm transition-colors"
-                        style={{
-                          color: 'var(--text-secondary)',
-                          borderRadius: 'var(--radius-md)',
-                          transition: 'var(--transition-fast)'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'var(--bg-elevated)';
-                          e.currentTarget.style.color = 'var(--text-primary)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'transparent';
-                          e.currentTarget.style.color = 'var(--text-secondary)';
-                        }}
-                        onClick={onToggle}
-                      >
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                  <ul className="space-y-2">
+                    {section.items.map((item) => (
+                      <li key={item.name}>
+                        <Link
+                          href={item.href}
+                          className="block py-2 px-3 rounded-md text-sm transition-colors"
+                          style={{
+                            color: 'var(--text-secondary)',
+                            borderRadius: 'var(--radius-md)',
+                            transition: 'var(--transition-fast)'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'var(--bg-elevated)';
+                            e.currentTarget.style.color = 'var(--text-primary)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'transparent';
+                            e.currentTarget.style.color = 'var(--text-secondary)';
+                          }}
+                          onClick={onToggle}
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             ))}
           </div>
