@@ -118,3 +118,14 @@ Each component has a dedicated documentation page under `/src/app/components/[co
 - Interactive examples
 - Accessibility features
 - Usage guidelines
+
+## Todo List Management
+
+**IMPORTANT**: After completing any component group, always update `/tasks/todo.md` to reflect the current progress:
+
+1. **Mark completed components** with `[x]` checkboxes
+2. **Update group status** by adding "✅ COMPLETED" to the group header when all components in that group are finished
+3. **Maintain accuracy** - the todo list should always reflect the true state of component implementation
+4. **Include component details** - ensure each completed component entry includes its key features and capabilities
+
+This ensures the roadmap stays current and stakeholders can easily track progress across the design system development.
