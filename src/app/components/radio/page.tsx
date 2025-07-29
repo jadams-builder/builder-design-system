@@ -3,25 +3,183 @@
 import React, { useState } from 'react';
 import { Radio, RadioGroup } from '@/components/Radio';
 
+function CodeBlock({ children }: { children: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = async () => {
+    await navigator.clipboard.writeText(children);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="relative">
+      <pre 
+        className="p-4 rounded-lg text-sm overflow-x-auto font-mono"
+        style={{
+          background: 'var(--code-bg)',
+          color: 'var(--code-text)',
+          borderRadius: 'var(--radius-lg)'
+        }}
+      >
+        <code>{children}</code>
+      </pre>
+      <button
+        onClick={copyToClipboard}
+        className="absolute top-2 right-2 px-2 py-1 text-xs rounded"
+        style={{
+          background: 'var(--bg-elevated)',
+          color: 'var(--text-secondary)',
+          border: `var(--border-thin) solid var(--border-secondary)`,
+          borderRadius: 'var(--radius-sm)'
+        }}
+      >
+        {copied ? 'Copied!' : 'Copy'}
+      </button>
+    </div>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="mb-12">
+      <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
+function Example({ title, description, children, code }: { 
+  title: string; 
+  description?: string; 
+  children: React.ReactNode; 
+  code: string; 
+}) {
+  return (
+    <div className="mb-8">
+      <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+        {title}
+      </h3>
+      {description && (
+        <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
+          {description}
+        </p>
+      )}
+      
+      {/* Preview */}
+      <div 
+        className="p-6 rounded-lg border mb-4"
+        style={{
+          background: 'var(--card-bg)',
+          border: `var(--border-thin) solid var(--card-border)`,
+          borderRadius: 'var(--card-border-radius)'
+        }}
+      >
+        <div className="flex flex-col gap-4">
+          {children}
+        </div>
+      </div>
+      
+      {/* Code */}
+      <CodeBlock>{code}</CodeBlock>
+    </div>
+  );
+}
+
 export default function RadioPage() {
   const [selectedPlan, setSelectedPlan] = useState<string | number>('basic');
   const [selectedTheme, setSelectedTheme] = useState<string | number>('dark');
-  const [selectedSize, setSelectedSize] = useState<string | number>('medium');
   const [paymentMethod, setPaymentMethod] = useState<string | number>('card');
 
   return (
-    <div className="component-page">
-      <div className="component-header">
-        <h1>Radio Button</h1>
-        <p>
+    <div className="max-w-6xl mx-auto px-8 py-12">
+      <div className="mb-12">
+        <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+          Radio Button
+        </h1>
+        <p className="text-lg mb-6" style={{ color: 'var(--text-secondary)' }}>
           Radio button component for mutually exclusive selections with 
           comprehensive group management and accessibility features.
         </p>
+        
+        {/* Props table */}
+        <div 
+          className="rounded-lg border overflow-hidden"
+          style={{
+            background: 'var(--card-bg)',
+            border: `var(--border-thin) solid var(--card-border)`,
+            borderRadius: 'var(--card-border-radius)'
+          }}
+        >
+          <div 
+            className="px-6 py-3 border-b"
+            style={{
+              background: 'var(--bg-elevated)',
+              borderBottom: `var(--border-thin) solid var(--border-secondary)`
+            }}
+          >
+            <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Props</h4>
+          </div>
+          <div className="p-6">
+            <div className="space-y-3">
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="font-semibold" style={{ color: 'var(--text-primary)' }}>Prop</div>
+                <div className="font-semibold" style={{ color: 'var(--text-primary)' }}>Type</div>
+                <div className="font-semibold" style={{ color: 'var(--text-primary)' }}>Default</div>
+                <div className="font-semibold" style={{ color: 'var(--text-primary)' }}>Description</div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="font-mono" style={{ color: 'var(--text-secondary)' }}>label</div>
+                <div style={{ color: 'var(--text-secondary)' }}>string</div>
+                <div style={{ color: 'var(--text-secondary)' }}>-</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Radio button label text</div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="font-mono" style={{ color: 'var(--text-secondary)' }}>value</div>
+                <div style={{ color: 'var(--text-secondary)' }}>string | number</div>
+                <div style={{ color: 'var(--text-secondary)' }}>-</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Unique value for this radio option</div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="font-mono" style={{ color: 'var(--text-secondary)' }}>size</div>
+                <div style={{ color: 'var(--text-secondary)' }}>&apos;sm&apos; | &apos;base&apos; | &apos;lg&apos;</div>
+                <div style={{ color: 'var(--text-secondary)' }}>&apos;base&apos;</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Radio button size</div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="font-mono" style={{ color: 'var(--text-secondary)' }}>disabled</div>
+                <div style={{ color: 'var(--text-secondary)' }}>boolean</div>
+                <div style={{ color: 'var(--text-secondary)' }}>false</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Disable the radio button</div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="font-mono" style={{ color: 'var(--text-secondary)' }}>name</div>
+                <div style={{ color: 'var(--text-secondary)' }}>string</div>
+                <div style={{ color: 'var(--text-secondary)' }}>-</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Name attribute for grouping</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <section className="component-section">
-        <h2>Basic Usage</h2>
-        <div className="component-demo">
+      <Section title="Basic Usage">
+        <Example
+          title="Radio Group"
+          description="Radio buttons work best when grouped together. Use RadioGroup for easy management."
+          code={`<RadioGroup
+  label="Choose a plan"
+  value={selectedPlan}
+  onChange={setSelectedPlan}
+  name="plan"
+>
+  <Radio value="basic" label="Basic Plan" />
+  <Radio value="pro" label="Pro Plan" />
+  <Radio value="enterprise" label="Enterprise Plan" />
+</RadioGroup>`}
+        >
           <RadioGroup
             label="Choose a plan"
             value={selectedPlan}
@@ -32,49 +190,87 @@ export default function RadioPage() {
             <Radio value="pro" label="Pro Plan" />
             <Radio value="enterprise" label="Enterprise Plan" />
           </RadioGroup>
-        </div>
-      </section>
+        </Example>
+      </Section>
 
-      <section className="component-section">
-        <h2>Sizes</h2>
-        <div className="component-demo">
-          <div className="demo-column">
-            <RadioGroup
-              label="Small size"
-              value="option1"
-              onChange={() => {}}
-              size="sm"
-            >
-              <Radio value="option1" label="Small radio option 1" />
-              <Radio value="option2" label="Small radio option 2" />
-            </RadioGroup>
+      <Section title="Sizes">
+        <Example
+          title="Radio Button Sizes"
+          description="Radio buttons come in three sizes, each using design token values for consistent spacing."
+          code={`<RadioGroup label="Small size" value="option1" onChange={() => {}} size="sm">
+  <Radio value="option1" label="Small radio option 1" />
+  <Radio value="option2" label="Small radio option 2" />
+</RadioGroup>
 
-            <RadioGroup
-              label="Default size"
-              value="option1"
-              onChange={() => {}}
-              size="base"
-            >
-              <Radio value="option1" label="Default radio option 1" />
-              <Radio value="option2" label="Default radio option 2" />
-            </RadioGroup>
+<RadioGroup label="Default size" value="option1" onChange={() => {}} size="base">
+  <Radio value="option1" label="Default radio option 1" />
+  <Radio value="option2" label="Default radio option 2" />
+</RadioGroup>
 
-            <RadioGroup
-              label="Large size"
-              value="option1"
-              onChange={() => {}}
-              size="lg"
-            >
-              <Radio value="option1" label="Large radio option 1" />
-              <Radio value="option2" label="Large radio option 2" />
-            </RadioGroup>
-          </div>
-        </div>
-      </section>
+<RadioGroup label="Large size" value="option1" onChange={() => {}} size="lg">
+  <Radio value="option1" label="Large radio option 1" />
+  <Radio value="option2" label="Large radio option 2" />
+</RadioGroup>`}
+        >
+          <RadioGroup
+            label="Small size"
+            value="option1"
+            onChange={() => {}}
+            size="sm"
+          >
+            <Radio value="option1" label="Small radio option 1" />
+            <Radio value="option2" label="Small radio option 2" />
+          </RadioGroup>
 
-      <section className="component-section">
-        <h2>With Descriptions</h2>
-        <div className="component-demo">
+          <RadioGroup
+            label="Default size"
+            value="option1"
+            onChange={() => {}}
+            size="base"
+          >
+            <Radio value="option1" label="Default radio option 1" />
+            <Radio value="option2" label="Default radio option 2" />
+          </RadioGroup>
+
+          <RadioGroup
+            label="Large size"
+            value="option1"
+            onChange={() => {}}
+            size="lg"
+          >
+            <Radio value="option1" label="Large radio option 1" />
+            <Radio value="option2" label="Large radio option 2" />
+          </RadioGroup>
+        </Example>
+      </Section>
+
+      <Section title="With Descriptions">
+        <Example
+          title="Descriptive Options"
+          description="Radio buttons can include additional description text for better clarity."
+          code={`<RadioGroup
+  label="Select theme"
+  description="Choose your preferred theme for the application."
+  value={selectedTheme}
+  onChange={setSelectedTheme}
+>
+  <Radio
+    value="light"
+    label="Light Theme"
+    description="Clean and bright interface suitable for daytime use."
+  />
+  <Radio
+    value="dark"
+    label="Dark Theme"
+    description="Easy on the eyes with reduced blue light emission."
+  />
+  <Radio
+    value="auto"
+    label="Auto Theme"
+    description="Switches between light and dark based on system settings."
+  />
+</RadioGroup>`}
+        >
           <RadioGroup
             label="Select theme"
             description="Choose your preferred theme for the application interface."
@@ -98,128 +294,71 @@ export default function RadioPage() {
               description="Automatically switches between light and dark based on system settings."
             />
           </RadioGroup>
-        </div>
-      </section>
+        </Example>
+      </Section>
 
-      <section className="component-section">
-        <h2>States</h2>
-        <div className="component-demo">
-          <div className="demo-column">
-            <div>
-              <h4 style={{ color: 'var(--text-primary)', marginBottom: 'var(--space-3)' }}>
-                Default State
-              </h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-                <Radio value="unselected" label="Unselected" />
-                <Radio value="selected" label="Selected" checked />
-              </div>
-            </div>
+      <Section title="States">
+        <Example
+          title="Radio Button States"
+          description="Different states including default, selected, and disabled."
+          code={`// Default State
+<Radio value="unselected" label="Unselected" />
+<Radio value="selected" label="Selected" checked />
 
-            <div>
-              <h4 style={{ color: 'var(--text-primary)', marginBottom: 'var(--space-3)' }}>
-                Disabled State
-              </h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-                <Radio value="disabled-unselected" label="Disabled Unselected" disabled />
-                <Radio value="disabled-selected" label="Disabled Selected" disabled checked />
-              </div>
+// Disabled State  
+<Radio value="disabled-unselected" label="Disabled Unselected" disabled />
+<Radio value="disabled-selected" label="Disabled Selected" disabled checked />`}
+        >
+          <div>
+            <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+              Default State
+            </h4>
+            <div className="space-y-2 mb-6">
+              <Radio value="unselected" label="Unselected" />
+              <Radio value="selected" label="Selected" checked />
             </div>
           </div>
-        </div>
-      </section>
 
-      <section className="component-section">
-        <h2>Error State</h2>
-        <div className="component-demo">
-          <RadioGroup
-            label="Payment method"
-            description="Select your preferred payment method for this transaction."
-            error="Please select a payment method to continue."
-            value=""
-            onChange={() => {}}
-            name="payment-error"
-          >
-            <Radio
-              value="card"
-              label="Credit Card"
-              description="Pay securely with your credit or debit card."
-              error="Card payment is currently unavailable"
-            />
-            <Radio
-              value="paypal"
-              label="PayPal"
-              description="Use your PayPal account for quick checkout."
-            />
-            <Radio
-              value="bank"
-              label="Bank Transfer"
-              description="Direct transfer from your bank account."
-            />
-          </RadioGroup>
-        </div>
-      </section>
-
-      <section className="component-section">
-        <h2>Disabled Group</h2>
-        <div className="component-demo">
-          <RadioGroup
-            label="Unavailable options"
-            description="These options are currently disabled."
-            value="option1"
-            onChange={() => {}}
-            disabled
-            name="disabled-group"
-          >
-            <Radio
-              value="option1"
-              label="Disabled Option 1"
-              description="This option is not available right now."
-            />
-            <Radio
-              value="option2"
-              label="Disabled Option 2"
-              description="This option is also unavailable."
-            />
-          </RadioGroup>
-        </div>
-      </section>
-
-      <section className="component-section">
-        <h2>Standalone Radio Buttons</h2>
-        <div className="component-demo">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-            <h4 style={{ color: 'var(--text-primary)' }}>Individual radio buttons (same name for mutual exclusion):</h4>
-            <Radio
-              name="standalone"
-              value="option-a"
-              label="Standalone Option A"
-              description="This radio button is managed individually."
-              checked={selectedSize === 'option-a'}
-              onChange={(e) => setSelectedSize((e.target as HTMLInputElement).value)}
-            />
-            <Radio
-              name="standalone"
-              value="option-b"
-              label="Standalone Option B"
-              description="This radio button is also managed individually."
-              checked={selectedSize === 'option-b'}
-              onChange={(e) => setSelectedSize((e.target as HTMLInputElement).value)}
-            />
-            <Radio
-              name="standalone"
-              value="option-c"
-              label="Standalone Option C"
-              description="All these radio buttons share the same name attribute."
-              checked={selectedSize === 'option-c'}
-              onChange={(e) => setSelectedSize((e.target as HTMLInputElement).value)}
-            />
+          <div>
+            <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+              Disabled State
+            </h4>
+            <div className="space-y-2">
+              <Radio value="disabled-unselected" label="Disabled Unselected" disabled />
+              <Radio value="disabled-selected" label="Disabled Selected" disabled checked />
+            </div>
           </div>
-        </div>
-      </section>
+        </Example>
+      </Section>
 
-      <section className="component-section">
-        <h2>Complex Example</h2>
-        <div className="component-demo">
+      <Section title="Complex Example">
+        <Example
+          title="Payment Method Selection"
+          description="A comprehensive example showing radio buttons for selecting payment methods."
+          code={`<RadioGroup
+  label="Payment method"
+  description="Choose how you'd like to pay for your subscription."
+  value={paymentMethod}
+  onChange={setPaymentMethod}
+  name="payment"
+>
+  <Radio
+    value="card"
+    label="Credit or Debit Card"
+    description="We accept Visa, Mastercard, American Express, and Discover."
+  />
+  <Radio
+    value="paypal"
+    label="PayPal"
+    description="Pay with your PayPal account. Redirected to PayPal to complete payment."
+  />
+  <Radio
+    value="apple-pay"
+    label="Apple Pay"
+    description="Use Touch ID or Face ID to pay securely with Apple Pay."
+  />
+</RadioGroup>`}
+        >
           <RadioGroup
             label="Payment method"
             description="Choose how you'd like to pay for your subscription."
@@ -242,143 +381,68 @@ export default function RadioPage() {
               label="Apple Pay"
               description="Use Touch ID or Face ID to pay securely with Apple Pay on supported devices."
             />
-            <Radio
-              value="google-pay"
-              label="Google Pay"
-              description="Pay quickly and securely with your saved payment methods in Google Pay."
-            />
-            <Radio
-              value="bank"
-              label="Bank Transfer"
-              description="Direct transfer from your bank account. This may take 3-5 business days to process."
-            />
           </RadioGroup>
+        </Example>
+      </Section>
+
+      <Section title="Design Token Usage">
+        <div 
+          className="p-6 rounded-lg border"
+          style={{
+            background: 'var(--card-bg)',
+            border: `var(--border-thin) solid var(--card-border)`,
+            borderRadius: 'var(--card-border-radius)'
+          }}
+        >
+          <p className="mb-4" style={{ color: 'var(--text-primary)' }}>
+            The Radio component uses the following design tokens:
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <h4 className="font-semibold mb-2" style={{ color: 'var(--text-brand-primary)' }}>Colors</h4>
+              <ul className="space-y-1 font-mono" style={{ color: 'var(--text-secondary)' }}>
+                <li>--color-purple-500 (selected)</li>
+                <li>--color-purple-400 (hover)</li>
+                <li>--input-bg (background)</li>
+                <li>--input-border (border)</li>
+                <li>--border-focus (focus)</li>
+                <li>--text-error (error state)</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-2" style={{ color: 'var(--text-brand-primary)' }}>Spacing & Sizing</h4>
+              <ul className="space-y-1 font-mono" style={{ color: 'var(--text-secondary)' }}>
+                <li>--space-4, --space-5, --space-6 (sizes)</li>
+                <li>--space-1_5, --space-2, --space-2_5 (dot)</li>
+                <li>--space-3 (gap between elements)</li>
+                <li>50% border-radius (circular shape)</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-2" style={{ color: 'var(--text-brand-primary)' }}>Typography</h4>
+              <ul className="space-y-1 font-mono" style={{ color: 'var(--text-secondary)' }}>
+                <li>--font-primary</li>
+                <li>--font-base (label)</li>
+                <li>--font-sm (description)</li>
+                <li>--font-weight-medium</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-2" style={{ color: 'var(--text-brand-primary)' }}>Effects</h4>
+              <ul className="space-y-1 font-mono" style={{ color: 'var(--text-secondary)' }}>
+                <li>--transition-fast</li>
+                <li>--focus-ring</li>
+                <li>--line-height-snug</li>
+                <li>--line-height-normal</li>
+              </ul>
+            </div>
+          </div>
         </div>
-      </section>
-
-      <section className="component-section">
-        <h2>Code Example</h2>
-        <div className="code-block">
-          <pre>
-            <code>{`import { Radio, RadioGroup } from '@/components/Radio';
-
-// Group usage (recommended)
-<RadioGroup
-  label="Select plan"
-  description="Choose your subscription plan"
-  value={selectedPlan}
-  onChange={setSelectedPlan}
-  name="plan"
->
-  <Radio value="basic" label="Basic Plan" />
-  <Radio value="pro" label="Pro Plan" />
-  <Radio value="enterprise" label="Enterprise Plan" />
-</RadioGroup>
-
-// Individual radio buttons
-<Radio
-  name="theme"
-  value="dark"
-  label="Dark Theme"
-  description="Easy on the eyes"
-  checked={theme === 'dark'}
-  onChange={(e) => setTheme(e.target.value)}
-/>
-
-// With error state
-<RadioGroup
-  label="Payment method"
-  error="Please select a payment method"
-  value={payment}
-  onChange={setPayment}
->
-  <Radio value="card" label="Credit Card" />
-  <Radio value="paypal" label="PayPal" />
-</RadioGroup>`}</code>
-          </pre>
-        </div>
-      </section>
-
-      <style jsx>{`
-        .component-page {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: var(--space-8);
-          font-family: var(--font-primary);
-        }
-
-        .component-header {
-          margin-bottom: var(--space-12);
-          text-align: center;
-        }
-
-        .component-header h1 {
-          color: var(--text-primary);
-          font-size: var(--font-4xl);
-          font-weight: var(--font-weight-bold);
-          margin-bottom: var(--space-4);
-        }
-
-        .component-header p {
-          color: var(--text-secondary);
-          font-size: var(--font-lg);
-          max-width: 600px;
-          margin: 0 auto;
-          line-height: var(--line-height-relaxed);
-        }
-
-        .component-section {
-          margin-bottom: var(--space-16);
-        }
-
-        .component-section h2 {
-          color: var(--text-primary);
-          font-size: var(--font-2xl);
-          font-weight: var(--font-weight-semibold);
-          margin-bottom: var(--space-6);
-          border-bottom: var(--border-thin) solid var(--border-secondary);
-          padding-bottom: var(--space-3);
-        }
-
-        .component-demo {
-          background: var(--bg-tertiary);
-          border: var(--border-thin) solid var(--border-secondary);
-          border-radius: var(--radius-xl);
-          padding: var(--space-8);
-        }
-
-        .demo-column {
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-8);
-        }
-
-        .code-block {
-          background: var(--color-gray-950);
-          border: var(--border-thin) solid var(--border-primary);
-          border-radius: var(--radius-lg);
-          overflow: hidden;
-        }
-
-        .code-block pre {
-          margin: 0;
-          padding: var(--space-6);
-          overflow-x: auto;
-        }
-
-        .code-block code {
-          font-family: var(--font-mono);
-          font-size: var(--font-sm);
-          line-height: var(--line-height-relaxed);
-          color: var(--code-text);
-        }
-
-        @media (max-width: 768px) {
-          .component-page {
-            padding: var(--space-4);
-          }
-        }
-      `}</style>
+      </Section>
     </div>
   );
 }

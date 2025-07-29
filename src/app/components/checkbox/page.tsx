@@ -3,104 +3,252 @@
 import React, { useState } from 'react';
 import { Checkbox, CheckboxGroup } from '@/components/Checkbox';
 
-export default function CheckboxPage() {
-  const [basicChecked, setBasicChecked] = useState(false);
-  const [checkedItems, setCheckedItems] = useState({
-    option1: false,
-    option2: true,
-    option3: false
-  });
-  const [groupItems, setGroupItems] = useState({
-    feature1: true,
-    feature2: false,
-    feature3: true
-  });
-  const [indeterminateParent, setIndeterminateParent] = useState(false);
-  const [indeterminateChildren, setIndeterminateChildren] = useState({
-    child1: true,
-    child2: false,
-    child3: false
-  });
+function CodeBlock({ children }: { children: string }) {
+  const [copied, setCopied] = useState(false);
 
-  const handleIndeterminateParentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.checked;
-    setIndeterminateParent(newValue);
-    setIndeterminateChildren({
-      child1: newValue,
-      child2: newValue,
-      child3: newValue
-    });
-  };
-
-  const handleIndeterminateChildChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newChildren = {
-      ...indeterminateChildren,
-      [key]: e.target.checked
-    };
-    setIndeterminateChildren(newChildren);
-    
-    const checkedCount = Object.values(newChildren).filter(Boolean).length;
-    const totalCount = Object.keys(newChildren).length;
-    
-    setIndeterminateParent(checkedCount === totalCount);
-  };
-
-  const isIndeterminate = () => {
-    const checkedCount = Object.values(indeterminateChildren).filter(Boolean).length;
-    const totalCount = Object.keys(indeterminateChildren).length;
-    return checkedCount > 0 && checkedCount < totalCount;
+  const copyToClipboard = async () => {
+    await navigator.clipboard.writeText(children);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="component-page">
-      <div className="component-header">
-        <h1>Checkbox</h1>
-        <p>
+    <div className="relative">
+      <pre 
+        className="p-4 rounded-lg text-sm overflow-x-auto font-mono"
+        style={{
+          background: 'var(--code-bg)',
+          color: 'var(--code-text)',
+          borderRadius: 'var(--radius-lg)'
+        }}
+      >
+        <code>{children}</code>
+      </pre>
+      <button
+        onClick={copyToClipboard}
+        className="absolute top-2 right-2 px-2 py-1 text-xs rounded"
+        style={{
+          background: 'var(--bg-elevated)',
+          color: 'var(--text-secondary)',
+          border: `var(--border-thin) solid var(--border-secondary)`,
+          borderRadius: 'var(--radius-sm)'
+        }}
+      >
+        {copied ? 'Copied!' : 'Copy'}
+      </button>
+    </div>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="mb-12">
+      <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
+function Example({ title, description, children, code }: { 
+  title: string; 
+  description?: string; 
+  children: React.ReactNode; 
+  code: string; 
+}) {
+  return (
+    <div className="mb-8">
+      <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+        {title}
+      </h3>
+      {description && (
+        <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
+          {description}
+        </p>
+      )}
+      
+      {/* Preview */}
+      <div 
+        className="p-6 rounded-lg border mb-4"
+        style={{
+          background: 'var(--card-bg)',
+          border: `var(--border-thin) solid var(--card-border)`,
+          borderRadius: 'var(--card-border-radius)'
+        }}
+      >
+        <div className="flex flex-col gap-4">
+          {children}
+        </div>
+      </div>
+      
+      {/* Code */}
+      <CodeBlock>{code}</CodeBlock>
+    </div>
+  );
+}
+
+export default function CheckboxPage() {
+  const [basicChecked, setBasicChecked] = useState(false);
+  const [sizeStates, setSizeStates] = useState({
+    sm: false,
+    base: true,
+    lg: false
+  });
+  const [groupStates, setGroupStates] = useState({
+    darkMode: true,
+    notifications: false,
+    autoSave: true
+  });
+
+  return (
+    <div className="max-w-6xl mx-auto px-8 py-12">
+      <div className="mb-12">
+        <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+          Checkbox
+        </h1>
+        <p className="text-lg mb-6" style={{ color: 'var(--text-secondary)' }}>
           Checkbox component for single and multiple selections with support for 
           indeterminate states, grouping, and comprehensive accessibility features.
         </p>
+        
+        {/* Props table */}
+        <div 
+          className="rounded-lg border overflow-hidden"
+          style={{
+            background: 'var(--card-bg)',
+            border: `var(--border-thin) solid var(--card-border)`,
+            borderRadius: 'var(--card-border-radius)'
+          }}
+        >
+          <div 
+            className="px-6 py-3 border-b"
+            style={{
+              background: 'var(--bg-elevated)',
+              borderBottom: `var(--border-thin) solid var(--border-secondary)`
+            }}
+          >
+            <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Props</h4>
+          </div>
+          <div className="p-6">
+            <div className="space-y-3">
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="font-semibold" style={{ color: 'var(--text-primary)' }}>Prop</div>
+                <div className="font-semibold" style={{ color: 'var(--text-primary)' }}>Type</div>
+                <div className="font-semibold" style={{ color: 'var(--text-primary)' }}>Default</div>
+                <div className="font-semibold" style={{ color: 'var(--text-primary)' }}>Description</div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="font-mono" style={{ color: 'var(--text-secondary)' }}>label</div>
+                <div style={{ color: 'var(--text-secondary)' }}>string</div>
+                <div style={{ color: 'var(--text-secondary)' }}>-</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Checkbox label text</div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="font-mono" style={{ color: 'var(--text-secondary)' }}>size</div>
+                <div style={{ color: 'var(--text-secondary)' }}>&apos;sm&apos; | &apos;base&apos; | &apos;lg&apos;</div>
+                <div style={{ color: 'var(--text-secondary)' }}>&apos;base&apos;</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Checkbox size</div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="font-mono" style={{ color: 'var(--text-secondary)' }}>indeterminate</div>
+                <div style={{ color: 'var(--text-secondary)' }}>boolean</div>
+                <div style={{ color: 'var(--text-secondary)' }}>false</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Show indeterminate state</div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="font-mono" style={{ color: 'var(--text-secondary)' }}>disabled</div>
+                <div style={{ color: 'var(--text-secondary)' }}>boolean</div>
+                <div style={{ color: 'var(--text-secondary)' }}>false</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Disable the checkbox</div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 text-sm">
+                <div className="font-mono" style={{ color: 'var(--text-secondary)' }}>error</div>
+                <div style={{ color: 'var(--text-secondary)' }}>string</div>
+                <div style={{ color: 'var(--text-secondary)' }}>-</div>
+                <div style={{ color: 'var(--text-secondary)' }}>Error message to display</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <section className="component-section">
-        <h2>Basic Usage</h2>
-        <div className="component-demo">
+      <Section title="Basic Usage">
+        <Example
+          title="Simple Checkbox"
+          description="A basic checkbox with a label. Click to toggle the checked state."
+          code={`<Checkbox
+  label="Accept terms and conditions"
+  checked={checked}
+  onChange={(e) => setChecked(e.target.checked)}
+/>`}
+        >
           <Checkbox
             label="Accept terms and conditions"
             checked={basicChecked}
             onChange={(e) => setBasicChecked(e.target.checked)}
           />
-        </div>
-      </section>
+        </Example>
+      </Section>
 
-      <section className="component-section">
-        <h2>Sizes</h2>
-        <div className="component-demo">
-          <div className="demo-row">
-            <Checkbox
-              label="Small checkbox"
-              size="sm"
-              checked={checkedItems.option1}
-              onChange={(e) => setCheckedItems(prev => ({...prev, option1: e.target.checked}))}
-            />
-            <Checkbox
-              label="Default checkbox"
-              size="base"
-              checked={checkedItems.option2}
-              onChange={(e) => setCheckedItems(prev => ({...prev, option2: e.target.checked}))}
-            />
-            <Checkbox
-              label="Large checkbox"
-              size="lg"
-              checked={checkedItems.option3}
-              onChange={(e) => setCheckedItems(prev => ({...prev, option3: e.target.checked}))}
-            />
-          </div>
-        </div>
-      </section>
+      <Section title="Sizes">
+        <Example
+          title="Checkbox Sizes"
+          description="Checkboxes come in three sizes, each using design token values for consistent spacing."
+          code={`<Checkbox label="Small checkbox" size="sm" checked={sm} onChange={setSm} />
+<Checkbox label="Default checkbox" size="base" checked={base} onChange={setBase} />
+<Checkbox label="Large checkbox" size="lg" checked={lg} onChange={setLg} />`}
+        >
+          <Checkbox
+            label="Small checkbox"
+            size="sm"
+            checked={sizeStates.sm}
+            onChange={(e) => setSizeStates(prev => ({...prev, sm: e.target.checked}))}
+          />
+          <Checkbox
+            label="Default checkbox"
+            size="base"
+            checked={sizeStates.base}
+            onChange={(e) => setSizeStates(prev => ({...prev, base: e.target.checked}))}
+          />
+          <Checkbox
+            label="Large checkbox"
+            size="lg"
+            checked={sizeStates.lg}
+            onChange={(e) => setSizeStates(prev => ({...prev, lg: e.target.checked}))}
+          />
+        </Example>
+      </Section>
 
-      <section className="component-section">
-        <h2>With Description</h2>
-        <div className="component-demo">
+      <Section title="States">
+        <Example
+          title="Checkbox States"
+          description="Different states including default, checked, indeterminate, and disabled."
+          code={`<Checkbox label="Default" checked={false} onChange={() => {}} />
+<Checkbox label="Checked" checked={true} onChange={() => {}} />
+<Checkbox label="Indeterminate" indeterminate={true} onChange={() => {}} />
+<Checkbox label="Disabled" disabled checked={false} onChange={() => {}} />
+<Checkbox label="Disabled Checked" disabled checked={true} onChange={() => {}} />`}
+        >
+          <Checkbox label="Default" checked={false} onChange={() => {}} />
+          <Checkbox label="Checked" checked={true} onChange={() => {}} />
+          <Checkbox label="Indeterminate" indeterminate={true} onChange={() => {}} />
+          <Checkbox label="Disabled" disabled checked={false} onChange={() => {}} />
+          <Checkbox label="Disabled Checked" disabled checked={true} onChange={() => {}} />
+        </Example>
+      </Section>
+
+      <Section title="With Description">
+        <Example
+          title="Descriptive Checkboxes"
+          description="Checkboxes can include additional description text for clarity."
+          code={`<Checkbox
+  label="Email notifications"
+  description="Receive updates about your account activity."
+  checked={true}
+  onChange={() => {}}
+/>`}
+        >
           <Checkbox
             label="Email notifications"
             description="Receive updates about your account activity and important announcements."
@@ -109,42 +257,26 @@ export default function CheckboxPage() {
           />
           <Checkbox
             label="Marketing emails"
-            description="Get the latest news, product updates, and special offers delivered to your inbox."
+            description="Get the latest news, product updates, and special offers."
             checked={false}
             onChange={() => {}}
           />
-        </div>
-      </section>
+        </Example>
+      </Section>
 
-      <section className="component-section">
-        <h2>States</h2>
-        <div className="component-demo">
-          <div className="demo-row">
-            <Checkbox label="Default" checked={false} onChange={() => {}} />
-            <Checkbox label="Checked" checked={true} onChange={() => {}} />
-            <Checkbox label="Indeterminate" indeterminate={true} onChange={() => {}} />
-            <Checkbox label="Disabled" disabled checked={false} onChange={() => {}} />
-            <Checkbox label="Disabled Checked" disabled checked={true} onChange={() => {}} />
-          </div>
-        </div>
-      </section>
-
-      <section className="component-section">
-        <h2>Error State</h2>
-        <div className="component-demo">
-          <Checkbox
-            label="Accept privacy policy"
-            description="Please review and accept our privacy policy to continue."
-            error="You must accept the privacy policy to proceed."
-            checked={false}
-            onChange={() => {}}
-          />
-        </div>
-      </section>
-
-      <section className="component-section">
-        <h2>Checkbox Group</h2>
-        <div className="component-demo">
+      <Section title="Checkbox Group">
+        <Example
+          title="Grouped Checkboxes"
+          description="Use CheckboxGroup to organize related checkboxes with a shared label and description."
+          code={`<CheckboxGroup
+  label="Select features"
+  description="Choose features to enable for your account."
+>
+  <Checkbox label="Dark mode" checked={darkMode} onChange={setDarkMode} />
+  <Checkbox label="Notifications" checked={notifications} onChange={setNotifications} />
+  <Checkbox label="Auto-save" checked={autoSave} onChange={setAutoSave} />
+</CheckboxGroup>`}
+        >
           <CheckboxGroup
             label="Select features"
             description="Choose which features you'd like to enable for your account."
@@ -152,187 +284,104 @@ export default function CheckboxPage() {
             <Checkbox
               label="Dark mode"
               description="Enable dark theme throughout the application"
-              checked={groupItems.feature1}
-              onChange={(e) => setGroupItems(prev => ({...prev, feature1: e.target.checked}))}
+              checked={groupStates.darkMode}
+              onChange={(e) => setGroupStates(prev => ({...prev, darkMode: e.target.checked}))}
             />
             <Checkbox
               label="Notifications"
               description="Receive real-time notifications"
-              checked={groupItems.feature2}
-              onChange={(e) => setGroupItems(prev => ({...prev, feature2: e.target.checked}))}
+              checked={groupStates.notifications}
+              onChange={(e) => setGroupStates(prev => ({...prev, notifications: e.target.checked}))}
             />
             <Checkbox
               label="Auto-save"
               description="Automatically save your work"
-              checked={groupItems.feature3}
-              onChange={(e) => setGroupItems(prev => ({...prev, feature3: e.target.checked}))}
+              checked={groupStates.autoSave}
+              onChange={(e) => setGroupStates(prev => ({...prev, autoSave: e.target.checked}))}
             />
           </CheckboxGroup>
-        </div>
-      </section>
+        </Example>
+      </Section>
 
-      <section className="component-section">
-        <h2>Indeterminate with Children</h2>
-        <div className="component-demo">
-          <div>
-            <Checkbox
-              label="Select All"
-              checked={indeterminateParent}
-              indeterminate={isIndeterminate()}
-              onChange={handleIndeterminateParentChange}
-            />
-            <div style={{ marginLeft: 'var(--space-6)', marginTop: 'var(--space-3)' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-                <Checkbox
-                  label="Option 1"
-                  checked={indeterminateChildren.child1}
-                  onChange={handleIndeterminateChildChange('child1')}
-                />
-                <Checkbox
-                  label="Option 2"
-                  checked={indeterminateChildren.child2}
-                  onChange={handleIndeterminateChildChange('child2')}
-                />
-                <Checkbox
-                  label="Option 3"
-                  checked={indeterminateChildren.child3}
-                  onChange={handleIndeterminateChildChange('child3')}
-                />
-              </div>
+      <Section title="Error State">
+        <Example
+          title="Validation"
+          description="Checkboxes can display error messages for validation feedback."
+          code={`<Checkbox
+  label="Accept privacy policy"
+  description="Please review and accept our privacy policy."
+  error="You must accept the privacy policy to proceed."
+  checked={false}
+  onChange={() => {}}
+/>`}
+        >
+          <Checkbox
+            label="Accept privacy policy"
+            description="Please review and accept our privacy policy to continue."
+            error="You must accept the privacy policy to proceed."
+            checked={false}
+            onChange={() => {}}
+          />
+        </Example>
+      </Section>
+
+      <Section title="Design Token Usage">
+        <div 
+          className="p-6 rounded-lg border"
+          style={{
+            background: 'var(--card-bg)',
+            border: `var(--border-thin) solid var(--card-border)`,
+            borderRadius: 'var(--card-border-radius)'
+          }}
+        >
+          <p className="mb-4" style={{ color: 'var(--text-primary)' }}>
+            The Checkbox component uses the following design tokens:
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <h4 className="font-semibold mb-2" style={{ color: 'var(--text-brand-primary)' }}>Colors</h4>
+              <ul className="space-y-1 font-mono" style={{ color: 'var(--text-secondary)' }}>
+                <li>--color-purple-500 (checked)</li>
+                <li>--color-purple-400 (hover)</li>
+                <li>--input-bg (background)</li>
+                <li>--input-border (border)</li>
+                <li>--border-focus (focus)</li>
+                <li>--text-error (error state)</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-2" style={{ color: 'var(--text-brand-primary)' }}>Spacing & Sizing</h4>
+              <ul className="space-y-1 font-mono" style={{ color: 'var(--text-secondary)' }}>
+                <li>--space-4, --space-5, --space-6 (sizes)</li>
+                <li>--space-3 (gap between elements)</li>
+                <li>--space-1_5 (error margin)</li>
+                <li>--radius-base, --radius-md, --radius-lg</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-2" style={{ color: 'var(--text-brand-primary)' }}>Typography</h4>
+              <ul className="space-y-1 font-mono" style={{ color: 'var(--text-secondary)' }}>
+                <li>--font-primary</li>
+                <li>--font-base (label)</li>
+                <li>--font-sm (description, error)</li>
+                <li>--font-weight-medium</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-2" style={{ color: 'var(--text-brand-primary)' }}>Effects</h4>
+              <ul className="space-y-1 font-mono" style={{ color: 'var(--text-secondary)' }}>
+                <li>--transition-fast</li>
+                <li>--focus-ring</li>
+                <li>--icon-xs, --icon-sm, --icon-base</li>
+              </ul>
             </div>
           </div>
         </div>
-      </section>
-
-      <section className="component-section">
-        <h2>Code Example</h2>
-        <div className="code-block">
-          <pre>
-            <code>{`import { Checkbox, CheckboxGroup } from '@/components/Checkbox';
-
-// Basic usage
-<Checkbox
-  label="Accept terms"
-  checked={checked}
-  onChange={(e) => setChecked(e.target.checked)}
-/>
-
-// With description and error
-<Checkbox
-  label="Email notifications"  
-  description="Receive updates about your account"
-  error="Please select an option"
-  checked={checked}
-  onChange={(e) => setChecked(e.target.checked)}
-/>
-
-// Indeterminate state
-<Checkbox
-  label="Select All"
-  indeterminate={true}
-  onChange={handleChange}
-/>
-
-// Grouped checkboxes
-<CheckboxGroup
-  label="Select features"
-  description="Choose features to enable"
->
-  <Checkbox label="Feature 1" checked={f1} onChange={setF1} />
-  <Checkbox label="Feature 2" checked={f2} onChange={setF2} />
-</CheckboxGroup>`}</code>
-          </pre>
-        </div>
-      </section>
-
-      <style jsx>{`
-        .component-page {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: var(--space-8);
-          font-family: var(--font-primary);
-        }
-
-        .component-header {
-          margin-bottom: var(--space-12);
-          text-align: center;
-        }
-
-        .component-header h1 {
-          color: var(--text-primary);
-          font-size: var(--font-4xl);
-          font-weight: var(--font-weight-bold);
-          margin-bottom: var(--space-4);
-        }
-
-        .component-header p {
-          color: var(--text-secondary);
-          font-size: var(--font-lg);
-          max-width: 600px;
-          margin: 0 auto;
-          line-height: var(--line-height-relaxed);
-        }
-
-        .component-section {
-          margin-bottom: var(--space-16);
-        }
-
-        .component-section h2 {
-          color: var(--text-primary);
-          font-size: var(--font-2xl);
-          font-weight: var(--font-weight-semibold);
-          margin-bottom: var(--space-6);
-          border-bottom: var(--border-thin) solid var(--border-secondary);
-          padding-bottom: var(--space-3);
-        }
-
-        .component-demo {
-          background: var(--bg-tertiary);
-          border: var(--border-thin) solid var(--border-secondary);
-          border-radius: var(--radius-xl);
-          padding: var(--space-8);
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-6);
-        }
-
-        .demo-row {
-          display: flex;
-          flex-wrap: wrap;
-          gap: var(--space-6);
-          align-items: flex-start;
-        }
-
-        .code-block {
-          background: var(--color-gray-950);
-          border: var(--border-thin) solid var(--border-primary);
-          border-radius: var(--radius-lg);
-          overflow: hidden;
-        }
-
-        .code-block pre {
-          margin: 0;
-          padding: var(--space-6);
-          overflow-x: auto;
-        }
-
-        .code-block code {
-          font-family: var(--font-mono);
-          font-size: var(--font-sm);
-          line-height: var(--line-height-relaxed);
-          color: var(--code-text);
-        }
-
-        @media (max-width: 768px) {
-          .component-page {
-            padding: var(--space-4);
-          }
-          
-          .demo-row {
-            flex-direction: column;
-          }
-        }
-      `}</style>
+      </Section>
     </div>
   );
 }

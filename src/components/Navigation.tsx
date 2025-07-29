@@ -115,7 +115,7 @@ export function Navigation({ isOpen, onToggle }: { isOpen: boolean; onToggle: ()
 
       {/* Sidebar */}
       <nav
-        className={`fixed top-0 left-0 z-50 h-full w-72 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-screen ${
+        className={`fixed top-0 left-0 z-50 h-screen w-72 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         style={{

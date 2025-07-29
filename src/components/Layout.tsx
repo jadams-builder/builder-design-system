@@ -13,13 +13,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
         onToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
       />
       
-      <div className="lg:flex">
+      <div className="lg:flex lg:h-screen">
         <Navigation
           isOpen={isMobileMenuOpen}
           onToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         />
         
-        <main className="flex-1 lg:ml-0">
+        <main className="flex-1 lg:ml-72 lg:overflow-y-auto">
           <div className="lg:hidden h-16"></div>
           {children}
         </main>
