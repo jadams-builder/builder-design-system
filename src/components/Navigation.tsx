@@ -3,7 +3,25 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-const navigationItems = [
+interface NavigationItem {
+  name: string;
+  href: string;
+}
+
+interface NavigationSubgroup {
+  name: string;
+  items: NavigationItem[];
+}
+
+interface NavigationSection {
+  title: string;
+  collapsible: boolean;
+  defaultOpen?: boolean;
+  items?: NavigationItem[];
+  subgroups?: NavigationSubgroup[];
+}
+
+const navigationItems: NavigationSection[] = [
   {
     title: 'Getting Started',
     collapsible: false,
@@ -28,12 +46,29 @@ const navigationItems = [
     title: 'Components',
     collapsible: true,
     defaultOpen: true,
-    items: [
-      { name: 'Button', href: '/components/button' },
-      { name: 'Input', href: '/components/input' },
-      { name: 'Card', href: '/components/card' },
-      { name: 'Badge', href: '/components/badge' },
-      { name: 'Modal', href: '/components/modal' },
+    subgroups: [
+      {
+        name: 'Basics',
+        items: [
+          { name: 'Button', href: '/components/button' },
+          { name: 'Input', href: '/components/input' },
+          { name: 'Card', href: '/components/card' },
+          { name: 'Badge', href: '/components/badge' },
+          { name: 'Modal', href: '/components/modal' },
+        ]
+      },
+      {
+        name: 'Essentials',
+        items: [
+          { name: 'Checkbox', href: '/components/checkbox' },
+          { name: 'Radio', href: '/components/radio' },
+          { name: 'Select', href: '/components/select' },
+          { name: 'Textarea', href: '/components/textarea' },
+          { name: 'Toggle', href: '/components/toggle' },
+          { name: 'Slider', href: '/components/slider' },
+          { name: 'File Upload', href: '/components/fileupload' },
+        ]
+      }
     ]
   },
   {
@@ -80,7 +115,7 @@ export function Navigation({ isOpen, onToggle }: { isOpen: boolean; onToggle: ()
 
       {/* Sidebar */}
       <nav
-        className={`fixed top-0 left-0 z-50 h-full w-72 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-auto ${
+        className={`fixed top-0 left-0 z-50 h-full w-72 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-screen ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         style={{
@@ -88,17 +123,26 @@ export function Navigation({ isOpen, onToggle }: { isOpen: boolean; onToggle: ()
           borderRight: `var(--border-thin) solid var(--border-primary)`
         }}
       >
-        <div className="p-6">
-          <Link href="/" className="block mb-8">
-            <h2 
-              className="text-xl font-bold"
-              style={{ color: 'var(--text-brand-primary)' }}
-            >
-              Builder.io Design System
-            </h2>
-          </Link>
+        <div className="h-full flex flex-col">
+          <div className="flex-shrink-0 p-6">
+            <Link href="/" className="block mb-8">
+              <h2 
+                className="text-xl font-bold"
+                style={{ color: 'var(--text-brand-primary)' }}
+              >
+                Builder.io Design System
+              </h2>
+            </Link>
+          </div>
 
-          <div className="space-y-6">
+          <div 
+            className="flex-1 overflow-y-auto px-6 pb-6"
+            style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'var(--color-gray-600) transparent'
+            }}
+          >
+            <div className="space-y-6">
             {navigationItems.map((section) => (
               <div key={section.title}>
                 {section.collapsible ? (
@@ -147,41 +191,109 @@ export function Navigation({ isOpen, onToggle }: { isOpen: boolean; onToggle: ()
                   className={`overflow-hidden transition-all duration-300 ease-in-out ${
                     section.collapsible && collapsedSections[section.title] 
                       ? 'max-h-0 opacity-0' 
-                      : 'max-h-96 opacity-100'
+                      : 'max-h-none opacity-100'
                   }`}
                 >
-                  <ul className="space-y-2">
-                    {section.items.map((item) => (
-                      <li key={item.name}>
-                        <Link
-                          href={item.href}
-                          className="block py-2 px-3 rounded-md text-sm transition-colors"
-                          style={{
-                            color: 'var(--text-secondary)',
-                            borderRadius: 'var(--radius-md)',
-                            transition: 'var(--transition-fast)'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'var(--bg-elevated)';
-                            e.currentTarget.style.color = 'var(--text-primary)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'transparent';
-                            e.currentTarget.style.color = 'var(--text-secondary)';
-                          }}
-                          onClick={onToggle}
-                        >
-                          {item.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                  {/* Render direct items if they exist */}
+                  {section.items && (
+                    <ul className="space-y-2">
+                      {section.items.map((item) => (
+                        <li key={item.name}>
+                          <Link
+                            href={item.href}
+                            className="block py-2 px-3 rounded-md text-sm transition-colors"
+                            style={{
+                              color: 'var(--text-secondary)',
+                              borderRadius: 'var(--radius-md)',
+                              transition: 'var(--transition-fast)'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = 'var(--bg-elevated)';
+                              e.currentTarget.style.color = 'var(--text-primary)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = 'transparent';
+                              e.currentTarget.style.color = 'var(--text-secondary)';
+                            }}
+                            onClick={onToggle}
+                          >
+                            {item.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  
+                  {/* Render subgroups if they exist */}
+                  {section.subgroups && (
+                    <div className="space-y-4">
+                      {section.subgroups.map((subgroup) => (
+                        <div key={subgroup.name}>
+                          <h4 
+                            className="text-xs font-medium uppercase tracking-wider mb-2 px-3"
+                            style={{ 
+                              color: 'var(--text-tertiary)',
+                              opacity: 0.8
+                            }}
+                          >
+                            {subgroup.name}
+                          </h4>
+                          <ul className="space-y-2">
+                            {subgroup.items.map((item) => (
+                              <li key={item.name}>
+                                <Link
+                                  href={item.href}
+                                  className="block py-2 px-3 rounded-md text-sm transition-colors"
+                                  style={{
+                                    color: 'var(--text-secondary)',
+                                    borderRadius: 'var(--radius-md)',
+                                    transition: 'var(--transition-fast)'
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = 'var(--bg-elevated)';
+                                    e.currentTarget.style.color = 'var(--text-primary)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = 'transparent';
+                                    e.currentTarget.style.color = 'var(--text-secondary)';
+                                  }}
+                                  onClick={onToggle}
+                                >
+                                  {item.name}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
+            </div>
           </div>
         </div>
       </nav>
+      
+      <style jsx>{`
+        .flex-1::-webkit-scrollbar {
+          width: 6px;
+        }
+        
+        .flex-1::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        
+        .flex-1::-webkit-scrollbar-thumb {
+          background-color: var(--color-gray-600);
+          border-radius: 3px;
+        }
+        
+        .flex-1::-webkit-scrollbar-thumb:hover {
+          background-color: var(--color-gray-500);
+        }
+      `}</style>
     </>
   );
 }
